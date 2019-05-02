@@ -1,0 +1,140 @@
+<template>
+<div class="list-wrapper"  v-loading="loading">
+    <ul class="list-container" id="list-ul">
+        <li v-for="(item,index) in blogList">
+            <router-link :to="{ name: 'article', query: {'articleId':item.blogID}}">
+              <p class="list-title">{{item.blogTitle}}</p>
+              <p class="list-updated">{{item.author}}</p>
+              <p class="list-abstract" v-for="item in item.keyWords.split(',') ">
+                  <el-tag type="success">{{item}}</el-tag>
+              </p>
+            </router-link>
+              <p class="list-keyWords">
+                <span @click="thumup(item.blogID,index)" style="cursor:pointer">👍{{item.thumUp}} </span>&nbsp&nbsp
+                <span @click="thumDown(item.blogID,index)" style="cursor:pointer">😔{{item.thumDown}}</span>&nbsp&nbsp
+                {{item.addTime}}
+              </p>
+        </li>
+    </ul>
+    <div class="pagination">
+      <el-pagination  @current-change="handleCurrentChange"
+      :current-page.sync="currentPage" :page-size="pageSize"
+      layout="prev, pager, next, jumper" :total="totalNum" >
+      </el-pagination>
+    </div>
+</div>
+</template>
+
+<script type="text/babel">
+import api from '@/api';
+export default {
+    data() {
+        return {
+          currentPage: 1,
+          pageSize:5,
+          totalNum:100,
+          blogList:[],
+          loading:false,
+        }
+    },
+    methods:{
+      thumup(blogID,index){
+        this.blogList[index].thumUp += 1;
+        console.log(blogID,index);
+      },
+      thumDown(blogID,index){
+        if(this.blogList[index].thumDown > 0){
+          this.blogList[index].thumDown -= 1;
+        }
+
+        console.log(blogID,index);
+      },
+      // 分页处理事件
+      handleCurrentChange(val) {
+        this.tableIsLoading = true;
+        this.currentPage = val;
+        this.getBlogList();
+      },
+      //获取博客列表
+      getBlogList() {
+        this.loading = true;
+        var params ={"currentPage":this.currentPage,
+                    "pageSize":this.pageSize,
+                    "blogTypeID": 0,
+                    "searchWords":''};
+        api.getBlogList(params).then((res)=>{
+          if(res.data.status == 'ok'){
+            this.totalNum = res.data.info.totalNum;
+            this.blogList = res.data.info.list;
+            //console.log(this.blogList);
+            this.loading = false;
+          }else{
+            this.$message(res.data.errMsg);
+            console.log(res.data.errMsg);
+          }
+        }).catch((err)=>{
+          console.error(err);
+        })
+      },
+    },
+    created() {
+      this.getBlogList();
+    }
+}
+</script>
+
+<style scoped>
+.list-container li {
+    border-bottom: 1px solid #eee;
+}
+
+.list-title {
+    font-size: 2.6rem;
+    font-weight: 400;
+    color: #404040;
+    margin-top: 0;
+}
+
+.list-abstract {
+    font-size: 1.6rem;
+    color: #919191;
+    font-weight: 300;
+    display: inline;
+    margin-right: 1rem;
+}
+.list-keyWords{
+  font-size: 1.6rem;
+  color: #919191;
+  font-weight: 300;
+  display: inline;
+  display: flex;
+  justify-content: flex-end;
+}
+.list-updated {
+    font-family: "Comic Sans MS", curslve, sans-serif;
+    font-size: 1.8rem;
+    color: #8b8b8b;
+    padding: 5px 0;
+}
+
+.list-container li a {
+    padding: 1rem 1.5rem;
+    display: block;
+    transition: all .3s;
+    margin: 0;
+}
+
+.list-container li a:hover {
+    background-color: Rgba(0, 0, 0, .02);
+}
+
+@media screen and (max-width: 768px) {
+    .list-title {
+        font-size: 2.2rem;
+    }
+
+    .list-updated {
+        font-size: 1.6rem;
+    }
+}
+</style>
