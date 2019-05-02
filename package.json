@@ -16,15 +16,16 @@
     "element-ui": "2.3.3",
     "marked": "^0.6.2",
     "mavon-editor": "^2.5.4",
+    "moment": "^2.24.0",
     "prismjs": "^1.14.0",
+    "qs": "latest",
     "vue": "^2.5.16",
     "vue-cropperjs": "^2.2.0",
     "vue-quill-editor": "3.0.6",
     "vue-router": "^3.0.1",
     "vue-schart": "^0.1.4",
     "vuedraggable": "^2.16.0",
-    "vuex": "^3.0.1",
-      "qs": "latest"
+    "vuex": "^3.0.1"
   },
   "devDependencies": {
     "autoprefixer": "^7.1.2",

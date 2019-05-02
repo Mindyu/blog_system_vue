@@ -10,7 +10,7 @@
             <el-button type="primary" icon="el-icon-circle-plus" @click="addBlog">新增</el-button>
             <el-select placeholder="类别筛选" v-model="blogTypeID" clearable class="handle-select mr10" @change="handleSelectChange">
                 <template v-for = 'type in blogTypeList'>
-                    <el-option :key="type.typeID" :label="type.typeName" :value="type.typeID"></el-option>
+                    <el-option :key="type.id" :label="type.type_name" :value="type.id"></el-option>
                 </template>
             </el-select>
             <el-input v-model="searchWords" placeholder="输入标题，关键字，作者进行检索" class="handle-input mr10"></el-input>
@@ -21,12 +21,12 @@
           element-loading-spinner="el-icon-loading"
           element-loading-background="rgba(0.8, 0.8, 0.8, 0.8)">
             <el-table-column type="index" width="80" label="序号"></el-table-column>
-            <el-table-column prop="blogTitle" label="标题" width="180"></el-table-column>
-            <el-table-column prop="keyWords" label="关键字" width="180" show-overflow-tooltip></el-table-column>
-            <el-table-column prop="typeID" label="类别"  width="150" :formatter="typeFormatter"></el-table-column>
+            <el-table-column prop="blog_title" label="标题" width="180"></el-table-column>
+            <el-table-column prop="keywords" label="关键字" width="180" show-overflow-tooltip></el-table-column>
+            <el-table-column prop="type_id" label="类别"  width="150" :formatter="typeFormatter"></el-table-column>
             <el-table-column prop="author" label="作者" width="100"></el-table-column>
             <el-table-column prop="personal" label="状态" width="100" :formatter="formatter"></el-table-column>
-            <el-table-column prop="addTime" label="日期"  width="150" ></el-table-column>
+            <el-table-column prop="created_at" label="日期"  width="150" :formatter="dateFormat" ></el-table-column>
             <el-table-column label="操作" width="185">
                 <template slot-scope="scope">
                         <el-button size="small" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
@@ -35,10 +35,14 @@
             </el-table-column>
         </el-table>
         <div class="pagination">
-          <el-pagination  @current-change="handleCurrentChange"
-          :current-page.sync="currentPage" :page-size="pageSize"
-          layout="prev, pager, next, jumper" :total="totalNum" >
-          </el-pagination>
+            <el-pagination @size-change="handleSizeChange"
+                           @current-change="handleCurrentChange"
+                           :current-page.sync="currentPage"
+                           layout="total, sizes, prev, pager, next, jumper"
+                           :page-sizes="[10, 20, 50]"
+                           :page-size="pageSize"
+                           :total="totalNum" >
+            </el-pagination>
         </div>
     </div>
     <!-- 删除提示框 -->
@@ -55,6 +59,7 @@
 <script>
 import api from '@/api';
 import bus from '@/components/common/bus';
+import moment from "moment";
 export default {
     data() {
         return {
@@ -86,14 +91,21 @@ export default {
           this.currentPage = val;
           this.getBlogList();
         },
+        handleSizeChange(val) {
+            this.tableIsLoading = true;
+            this.pageSize = val;
+            this.getBlogList();
+        },
         //获取博客列表
         getBlogList() {
-          var params ={"currentPage":this.currentPage,
-                      "pageSize":this.pageSize,
-                      "blogTypeID":this.blogTypeID == ''? 0:this.blogTypeID,
-                      "searchWords":this.searchWords};
+          var params ={
+              "current_page": this.currentPage,
+              "page_size": this.pageSize,
+              "blog_type_id": this.blogTypeID === ''? 0:this.blogTypeID,
+              "search_words": this.searchWords
+          };
           api.getBlogList(params).then((res)=>{
-            if(res.data.status == 'ok'){
+            if(res.data.status === 'ok'){
               this.totalNum = res.data.info.totalNum;
               this.blogList = res.data.info.list;
               this.tableIsLoading = false;
@@ -106,10 +118,10 @@ export default {
             console.error(err);
           })
         },
-        //或取博客所有类别
+        //获取博客所有类别
         getBlogType(){
           api.getBlogType().then((res)=>{
-            if(res.data.status == 'ok'){
+            if(res.data.status === 'ok'){
               this.blogTypeList = res.data.info;
             }else{
               this.$message(res.data.errMsg)
@@ -133,13 +145,13 @@ export default {
         //点击删除按钮
         handleDelete(index, row) {
             this.blogIndex = index;
-            this.blogID = row.blogID;
+            this.blogID = row.id;
             this.delVisible = true;
         },
         // 确定删除
         deleteRow() {
           api.delBlogByID({'blogID':this.blogID}).then((res)=>{
-            if(res.data.status == 'ok'){
+            if(res.data.status === 'ok'){
               this.blogList.splice(this.blogIndex, 1);
               this.$message.success('删除成功');
               this.delVisible = false;
@@ -152,22 +164,30 @@ export default {
         },
         //日期格式化
         formatter(row, column,cellValue) {
-          if(cellValue == 1){
+          if(cellValue === 1){
             return "公开";
           }else{
             return "私有";
           }
         },
+        //时间格式化  
+        dateFormat:function(row, column) {
+            var date = row[column.property];
+            if (date === undefined) {
+                return "";
+            }
+            return moment(date).format("YYYY-MM-DD HH:mm:ss");
+        },
         typeFormatter(row, column,cellValue){
           for(var i=0;i<this.blogTypeList.length;i++){
-            if(cellValue == this.blogTypeList[i].typeID){
-              return this.blogTypeList[i].typeName;
+            if(cellValue === this.blogTypeList[i].id){
+              return this.blogTypeList[i].type_name;
             }
           }
           return cellValue;
         },
         handleEdit(index, row) {
-            this.$router.push({ name:'blogAdd',query:{'operate': 'edit','blogID':row.blogID}});
+            this.$router.push({ name:'blogAdd',query:{'operate': 'edit','blog_id':row.id}});
             bus.$emit('refreshData');
         },
         addBlog(){

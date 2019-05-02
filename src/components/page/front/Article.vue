@@ -28,7 +28,7 @@ export default {
     },
     computed: {
         content: function() {
-            let _content = this.article.blogContent;
+            let _content = this.article.blog_content;
             console.log(_content);
             if(_content){
               marked(_content, (err, content) => {
@@ -46,9 +46,9 @@ export default {
             api.getBlogByID({
                 'blogID': blogID
             }).then((res) => {
-                if (res.data.status == 'ok') {
+                if (res.data.status === 'ok') {
                     this.article = res.data.info;
-                    bus.$emit('changeTitle',this.article.blogTitle);
+                    bus.$emit('changeTitle',this.article.blog_title);
                 } else {
                   //console.log(res.data.info);
                   this.$message.info(res.data.info);

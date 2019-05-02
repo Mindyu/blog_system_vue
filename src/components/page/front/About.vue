@@ -1,8 +1,8 @@
 <template>
   <div class="about-wrapper">
-    <h2 class="list-title">张春晖</h2>
+    <h2 class="list-title">Mindyu</h2>
     <p>个人博客前台页面</p>
-    <a>基于SprigBoot+Vue的个人博客系统</a>
+    <a>基于 gin + gorm 的个人博客系统</a>
   </div>
 </template>
 

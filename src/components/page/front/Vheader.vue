@@ -33,13 +33,13 @@ import bus from '@/components/common/bus'
     },
     watch:{
       '$route' (to, from) {
-        if(to.path == '/home'){
+        if(to.path === '/home'){
           this.headlineFinal = '主页';
-        }else if(to.path == '/tags'){
+        }else if(to.path === '/tags'){
           this.headlineFinal = '标签';
-        }else if(to.path == '/about'){
+        }else if(to.path === '/about'){
           this.headlineFinal = '关于';
-        }else if(to.path == '/feedback'){
+        }else if(to.path === '/feedback'){
           this.headlineFinal = '反馈';
         }else{
           this.headlineFinal = '';

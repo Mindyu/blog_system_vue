@@ -1,6 +1,6 @@
 <template>
   <div>
-    <p>Copyrights © 2018 荆棘鸟. All Rights Reserved.</p>
+    <p>Copyrights © 2018 Mindyu. All Rights Reserved.</p>
   </div>
 </template>
 

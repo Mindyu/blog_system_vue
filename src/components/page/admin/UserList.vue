@@ -27,7 +27,7 @@
             <el-table-column prop="phone" label="手机" width="120"></el-table-column>
             <el-table-column prop="email" label="邮箱" width="150"></el-table-column>
             <el-table-column prop="birthday" label="生日" width="100"></el-table-column>
-            <el-table-column prop="created_at" label="注册时间" width="150"></el-table-column>
+            <el-table-column prop="created_at" label="注册时间" width="150" :formatter="dateFormat"></el-table-column>
             <el-table-column prop="role_id" label="身份" width="100" :formatter="formatter"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
@@ -178,6 +178,7 @@
 <script>
 import api from '@/api';
 import tripledesUtil from '@/util/tripledesUtil'
+import moment from "moment";
 export default {
     data() {
         var validUsername = (rule, value, callback) => {
@@ -312,6 +313,14 @@ export default {
         //用户身份格式化
         formatter(row, column, cellValue) {
             return this.roleMap[cellValue];
+        },
+        //时间格式化  
+        dateFormat:function(row, column) {
+            var date = row[column.property];
+            if (date === undefined) {
+                return "";
+            }
+            return moment(date).format("YYYY-MM-DD HH:mm:ss");
         },
         handleView(index, row) {
             this.detailVisible = true;

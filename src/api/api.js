@@ -30,15 +30,15 @@ export const editUserInfo = params => { return axios.put(`${basePath}/user/edit`
 //按搜索条件查找博客
 export const getBlogList = params => { return axios.post(`${basePath}/blog/list`, params); };
 //获取博客所有类别
-export const getBlogType = params => { return axios.get(`${basePath}/blogType/list`, params); };
+export const getBlogType = params => { return axios.get(`${basePath}/blog/type`, params); };
 //通过ID获取博客详情
-export const getBlogByID = params => { return axios.get(`${basePath}/blog/id?blogId=`+params.blogID); };
+export const getBlogByID = params => { return axios.get(`${basePath}/blog/query?blogId=`+params.blogID); };
 //更新博客
-export const editBlogInfo = params => { return axios.post(`${basePath}/blog/update`, params); };
+export const editBlogInfo = params => { return axios.put(`${basePath}/blog/update`, params); };
 //添加博客
 export const addBlog = params => { return axios.post(`${basePath}/blog/add`, params); };
 //通过ID删除博客
-export const delBlogByID = params => { return axios.get(`${basePath}/blog/delete?blogID=`+params.blogID); };
+export const delBlogByID = params => { return axios.delete(`${basePath}/blog/delete?blogID=`+params.blogID); };
 
 
 //*******************************评论/回复管理***************************************************
