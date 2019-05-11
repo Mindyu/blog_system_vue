@@ -4,21 +4,21 @@
     <ul class="comments-list">
         <li class="comment-item" v-for="item in commentsList">
             <div class="comment-item-title">
-                <p class="comment-item-name">{{item.commentUsername}}</p>
-                <p class="comment-item-createdAt">{{item.commentTime}}</p>
+                <p class="comment-item-name">{{item.comment_username}}</p>
+                <p class="comment-item-createdAt">{{item.created_at}}</p>
             </div>
 
-            <div v-for="reply in item.replyList" class="comment-reply-container">
-                <div class="comment-item-title">
-                    <p class="comment-item-name">{{reply.replyUsername}}</p>
-                    <p class="comment-item-createdAt">{{reply.replyTime}}</p>
-                </div>
-                <p class="comment-item-content">{{reply.replyContent}}</p>
-            </div>
-
-            <p class="comment-item-content">{{item.commentContent}}</p>
+            <p class="comment-item-content">{{item.comment_content}}</p>
             <div class="comment-item-reply-wrapper">
-                <a @click="reply(item.commentID, item.commentUsername)" class="comment-item-reply">回复</a>
+                <a @click="reply(item.id, item.comment_username)" class="comment-item-reply">回复</a>
+            </div>
+
+            <div v-for="reply in item.comment_reply" class="comment-reply-container">
+                <div class="comment-item-title">
+                    <p class="comment-item-name">{{reply.reply_username}}</p>
+                    <p class="comment-item-createdAt">{{reply.created_at}}</p>
+                </div>
+                <p class="comment-item-content">{{reply.reply_content}}</p>
             </div>
         </li>
     </ul>
@@ -63,10 +63,10 @@ export default {
             if (this.replyName == '') {
                 //如果是评论
                 const params = {
-                    blogID: this.articleId,
-                    blogTitle: this.blogTitle,
-                    commentContent: this.formContent,
-                    commentUsername: this.formName
+                    "blog_id": this.articleId,
+                    "blog_title": this.blogTitle,
+                    "comment_content": this.formContent,
+                    "comment_username": this.formName
                 }
                 api.addComment(params).then((res) => {
                     if (res.data.status == 'ok') {
@@ -83,9 +83,9 @@ export default {
             } else {
                 //如果是回复
                 const params = {
-                    commentID: this.formReply, //回复的评论ID
-                    replyContent: this.formContent, //回复内容
-                    replyUsername: this.formName, //回复的用户名
+                    "comment_id": this.formReply, //回复的评论ID
+                    "reply_content": this.formContent, //回复内容
+                    "reply_username": this.formName, //回复的用户名
                 }
                 api.replyComment(params).then((res) => {
                     if (res.data.status == 'ok') {
@@ -113,9 +113,10 @@ export default {
         },
         getComments() {
             var params = {
-                'blogID': this.articleId,
-                "currentPage": 1,
-                "pageSize": 100
+                'blog_id': parseInt(this.articleId),
+                "search_words":'',
+                "current_page": 1,
+                "page_size": 100
             };
             api.getCommentByBlogID(params).then((res) => {
                 if (res.data.status) {

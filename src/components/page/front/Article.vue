@@ -3,7 +3,7 @@
     <div class="article">
         <div v-html="content"></div>
     </div>
-    <comment :blogTitle="this.article.blogTitle"></comment>
+    <comment :blogTitle="this.article.blog_title"></comment>
 </div>
 </template>
 

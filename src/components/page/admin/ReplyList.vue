@@ -86,7 +86,7 @@ export default {
         //点击删除按钮
         handleDelete(index, row) {
             this.commentIndex = index;
-            this.commentID = row.commentID;
+            this.commentID = row.id;
             this.delVisible = true;
         },
         // 确定删除

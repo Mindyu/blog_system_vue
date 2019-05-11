@@ -4,70 +4,120 @@ import Qs from 'qs'
 let basePath = 'http://localhost:8081';
 
 //获取token
-export const getToken = params => { return axios.post(`${basePath}/user/login`, Qs.stringify(params)); };
+export const getToken = params => {
+    return axios.post(`${basePath}/user/login`, Qs.stringify(params));
+};
 
 
 /********************************用户管理************************************************/
 //获取用户列表
-export const getUserList = params => { return axios.post(`${basePath}/user/all`, params); };
+export const getUserList = params => {
+    return axios.post(`${basePath}/user/all`, params);
+};
 //获取所有身份(admin/normal)
-export const getUserType = params => { return axios.get(`${basePath}/user/type`, params); };
+export const getUserType = params => {
+    return axios.get(`${basePath}/user/type`, params);
+};
 //获取某个用户详细信息(通过用户名)
-export const getUserInfo = params => { return axios.post(`${basePath}/user/query`, params); };
+export const getUserInfo = params => {
+    return axios.post(`${basePath}/user/query`, params);
+};
 //获取用户的权限和身份信息
-export const getRoleAndAuth = params =>{ return axios.get(`${basePath}/user/auth?username=`+params.username);}
+export const getRoleAndAuth = params => {
+    return axios.get(`${basePath}/user/auth?username=` + params.username);
+}
 //添加用户
-export const addUser = params => { return axios.post(`${basePath}/user/add`, params); };
+export const addUser = params => {
+    return axios.post(`${basePath}/user/add`, params);
+};
 //验证用户名是否已注册
-export const validUsername = params => { return axios.get(`${basePath}/user/valid/${params.username}`); };
+export const validUsername = params => {
+    return axios.get(`${basePath}/user/valid/${params.username}`);
+};
 //通过用户名删除某个用户
-export const delUserByID = params => { return axios.delete(`${basePath}/user/delete?userID=`+params.userID); };
+export const delUserByID = params => {
+    return axios.delete(`${basePath}/user/delete?userId=` + params.userID);
+};
 //编辑用户信息
-export const editUserInfo = params => { return axios.put(`${basePath}/user/edit`, params); };
+export const editUserInfo = params => {
+    return axios.put(`${basePath}/user/edit`, params);
+};
 
 
 //*********************************博客管理***********************************************
 //按搜索条件查找博客
-export const getBlogList = params => { return axios.post(`${basePath}/blog/list`, params); };
+export const getBlogList = params => {
+    return axios.post(`${basePath}/blog/list`, params);
+};
 //获取博客所有类别
-export const getBlogType = params => { return axios.get(`${basePath}/blog/type`, params); };
+export const getBlogType = params => {
+    return axios.get(`${basePath}/blog/type`, params);
+};
 //通过ID获取博客详情
-export const getBlogByID = params => { return axios.get(`${basePath}/blog/query?blogId=`+params.blogID); };
+export const getBlogByID = params => {
+    return axios.get(`${basePath}/blog/query?blogId=` + params.blogID);
+};
 //更新博客
-export const editBlogInfo = params => { return axios.put(`${basePath}/blog/update`, params); };
+export const editBlogInfo = params => {
+    return axios.put(`${basePath}/blog/update`, params);
+};
 //添加博客
-export const addBlog = params => { return axios.post(`${basePath}/blog/add`, params); };
+export const addBlog = params => {
+    return axios.post(`${basePath}/blog/add`, params);
+};
 //通过ID删除博客
-export const delBlogByID = params => { return axios.delete(`${basePath}/blog/delete?blogID=`+params.blogID); };
+export const delBlogByID = params => {
+    return axios.delete(`${basePath}/blog/delete?blogId=` + params.blogID);
+};
 
 
 //*******************************评论/回复管理***************************************************
 //获取评论列表
-export const getCommentList =  params => { return axios.post(`${basePath}/comment/query`, params); };
+export const getCommentList = params => {
+    return axios.post(`${basePath}/comment/list`, params);
+};
 //获取某一篇博客的评论
-export const getCommentByBlogID = params => { return axios.post(`${basePath}/comment/blogID`, params); };
+export const getCommentByBlogID = params => {
+    return axios.post(`${basePath}/comment/blogId`, params);
+};
 //删除评论
-export const delCommentByID = params => { return axios.post(`${basePath}/comment/delete`, params); };
+export const delCommentByID = params => {
+    return axios.delete(`${basePath}/comment/delete?commentId=` + params.commentID);
+};
 //批量删除评论
-export const delCommentList = params => { return axios.post(`${basePath}/comment/batchDelete`, params); };
+export const delCommentList = params => {
+    return axios.delete(`${basePath}/comment/batchDelete?commentIds=` + params.commentIdList);
+};
 //为博客添加评论
-export const addComment = params => { return axios.post(`${basePath}/comment/add`, params); };
+export const addComment = params => {
+    return axios.post(`${basePath}/comment/add`, params);
+};
 //回复评论
-export const replyComment = params => { return axios.post(`${basePath}/comment/reply`, params); };
+export const replyComment = params => {
+    return axios.post(`${basePath}/comment/reply`, params);
+};
 
 
 //********************************好友管理*************************************************
 //获取好友列表
-export const getFriendList =  params => { return axios.post(`${basePath}/friend/list`, params); };
+export const getFriendList = params => {
+    return axios.post(`${basePath}/friend/list`, params);
+};
 //删除好友
-export const delFriend = params => { return axios.post(`${basePath}/friend/delete`, params); };
+export const delFriend = params => {
+    return axios.delete(`${basePath}/friend/delete`, params);
+};
 
 
 //********************************系统日志***************************************************
 //获取系统日志列表（支持多种条件查询）
-export const getSystemLogList = params => { return axios.post(`${basePath}/system/logList`, params); };
+export const getSystemLogList = params => {
+    return axios.post(`${basePath}/system/logList`, params);
+};
 //删除系统日志
-export const delSystemLog = params => { return axios.post(`${basePath}/system/deleteLog`, params); };
+export const delSystemLog = params => {
+    return axios.post(`${basePath}/system/deleteLog`, params);
+};
 //批量删除日志
 
 //*******************************文件上传 ***************************************************
