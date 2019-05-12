@@ -86,7 +86,7 @@ export default {
         return {
             isLoading: false,
             ruleForm: {
-                username: 'zhangchunhui',
+                username: 'mindyu',
                 password: '123456'
             },
             rules: {

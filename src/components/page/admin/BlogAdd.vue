@@ -40,15 +40,16 @@
                         <mavon-editor v-model="addForm.blog_content" ref="md" @imgAdd="$imgAdd" @change="change"
                                       style="min-height: 600px"/>
                     </el-form-item>
+                    <!-- 博客附件上传
                     <el-form-item label-width="0px">
                         <el-upload class="upload-demo" drag
                                    :on-success="handleAvatarSuccess"
                                    :on-progress="getFileUploadProgress"
-                                   :action="uploadURL" :auto-upload="false" :limit="2">
+                                   :action="uploadURL" :auto-upload="true" :limit="2">
                             <i class="el-icon-upload"></i>
                             <div class="el-upload__text">将博客附件拖到此处，或<em>点击上传</em></div>
                         </el-upload>
-                    </el-form-item>
+                    </el-form-item>-->
                 </el-form>
             </div>
             <el-button class="editor-btn" type="primary" @click="saveTemp">保存草稿</el-button>
@@ -70,6 +71,7 @@
                 html: '',
                 configs: {},
                 uploadURL: '',
+                imagePath: '',
                 inputVisible: false,
                 inputValue: '',
                 blogTypeList: [],
@@ -99,22 +101,19 @@
             $imgAdd(pos, $file) {
                 var formdata = new FormData();
                 formdata.append('file', $file);
-                // 这里没有服务器供大家尝试，可将下面上传接口替换为你自己的服务器接口
                 this.$axios({
-                    url: '/common/upload',
+                    url: this.uploadURL,
                     method: 'post',
                     data: formdata,
                     headers: {
                         'Content-Type': 'multipart/form-data'
                     },
-                }).then((url) => {
-                    this.$refs.md.$img2Url(pos, url);
+                }).then((result) => {
+                    this.$refs.md.$img2Url(pos, this.imagePath + result.data.info);
                 })
             },
             handleAvatarSuccess(res, file) {
-                //console.log(file);
-                this.imageUrl = URL.createObjectURL(file.raw);
-                this.addform.avatar = file.response.info;
+                console.log(file);
                 this.$message.success('上传成功');
             },
             getFileUploadProgress(event, file, fileList) {
@@ -264,7 +263,8 @@
             }
         },
         created() {
-            this.uploadURL = api.uploadURL;
+            this.uploadURL = api.uploadURL + 'upload';
+            this.imagePath = api.uploadURL;
             bus.$on('refreshData', msg => {
                 this.initData();
             })

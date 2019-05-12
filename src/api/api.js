@@ -94,9 +94,20 @@ export const addComment = params => {
 };
 //回复评论
 export const replyComment = params => {
-    return axios.post(`${basePath}/comment/reply`, params);
+    return axios.post(`${basePath}/reply/add`, params);
 };
-
+//获取恢复列表
+export const getCommentReplyList = params => {
+    return axios.post(`${basePath}/reply/list`, params);
+};
+//删除回复
+export const delCommentReplyByID = params => {
+    return axios.delete(`${basePath}/reply/delete?replyId=` + params.replyID);
+};
+//批量删除回复
+export const delCommentReplyList = params => {
+    return axios.delete(`${basePath}/reply/batchDelete?replyIds=` + params.replyIdList);
+};
 
 //********************************好友管理*************************************************
 //获取好友列表
@@ -121,4 +132,4 @@ export const delSystemLog = params => {
 //批量删除日志
 
 //*******************************文件上传 ***************************************************
-export const uploadURL = `${basePath}/file/upload/avatar`;
+export const uploadURL = `${basePath}/file/`;
