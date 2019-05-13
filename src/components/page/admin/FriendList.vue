@@ -16,7 +16,7 @@
                 <el-table-column prop="nickname" label="好友昵称" width="120" show-overflow-tooltip></el-table-column>
                 <el-table-column label="头像" width="60">
                     <template slot-scope="scope">
-                        <img :src="scope.row.avatar" class="user-avator" @click="viewAvatar(scope.row)">
+                        <img :src="getImgUrl(scope.row.avatar)" class="user-avator" @click="viewAvatar(scope.row)">
                     </template>
                 </el-table-column>
                 <el-table-column prop="phone" label="好友手机" width="120"></el-table-column>
@@ -67,6 +67,7 @@
                 searchWords: '',
                 friendName: 0,
                 friendIndex: 0,
+                imagePath:'',
                 //删除提示框
                 delVisible: false,
                 tableIsLoading: false,
@@ -84,6 +85,9 @@
             },
         },
         methods: {
+            getImgUrl(val) {
+                return api.uploadURL + val;
+            },
             // 分页处理事件
             handleCurrentChange(val) {
                 this.currentPage = val;
@@ -124,7 +128,7 @@
                 })
             },
             viewAvatar(row) {
-                this.previewImgURL = row.avatar;
+                this.previewImgURL = this.imagePath + row.avatar;
                 this.dialogTitle = '头像预览-' + row.username;
                 this.previewDialogVisible = true;
             },
@@ -157,6 +161,7 @@
         },
         created() {
             this.tableIsLoading = true;
+            this.imagePath = api.uploadURL;
             this.getFriendList();
         }
     }

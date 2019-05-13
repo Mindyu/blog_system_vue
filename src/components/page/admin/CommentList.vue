@@ -22,7 +22,7 @@
                 <el-table-column prop="comment_content" label="评论内容" width="280" show-overflow-tooltip></el-table-column>
                 <el-table-column prop="created_at" label="评论时间" width="150"></el-table-column>
                 <el-table-column prop="blog_title" label="评论博客" width="240"></el-table-column>
-                <el-table-column label="操作" width="150">
+                <el-table-column label="操作" width="140">
                     <template slot-scope="scope">
                         <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除
                         </el-button>

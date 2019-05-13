@@ -119,17 +119,25 @@ export const delFriend = params => {
     return axios.delete(`${basePath}/friend/delete`, params);
 };
 
+//********************************关注管理*************************************************
+//获取关注列表
+export const getAttentionList = params => {
+    return axios.post(`${basePath}/attention/list`, params);
+};
+//删除关注
+export const delAttention = params => {
+    return axios.delete(`${basePath}/attention/delete`, params);
+};
 
 //********************************系统日志***************************************************
 //获取系统日志列表（支持多种条件查询）
 export const getSystemLogList = params => {
-    return axios.post(`${basePath}/system/logList`, params);
+    return axios.post(`${basePath}/system/list`, params);
 };
 //删除系统日志
 export const delSystemLog = params => {
-    return axios.post(`${basePath}/system/deleteLog`, params);
+    return axios.delete(`${basePath}/system/delete?logId=` + params.logId);
 };
-//批量删除日志
 
 //*******************************文件上传 ***************************************************
 export const uploadURL = `${basePath}/file/`;

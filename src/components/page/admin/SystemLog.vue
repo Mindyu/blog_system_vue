@@ -25,12 +25,11 @@
           style="width: 100%">
             <el-table-column type="index" width="80" label="序号"></el-table-column>
             <el-table-column prop="username" label="调用人" width="120"></el-table-column>
-            <el-table-column prop="callApi" label="调用接口" width="240"></el-table-column>
+            <el-table-column prop="call_api" label="调用接口" width="240"></el-table-column>
             <el-table-column prop="params" label="接收参数" width="200" :formatter="formatter" show-overflow-tooltip>
             </el-table-column>
             <el-table-column prop="operation" label="接口描述" width="150"></el-table-column>
-            <el-table-column prop="operationTime" label="调用时间" width="150"></el-table-column>
-            <el-table-column prop="logLevel" label="日志级别" width="100"></el-table-column>
+            <el-table-column prop="created_at" label="调用时间" width="150"></el-table-column>
             <el-table-column label="操作">
                 <template slot-scope="scope">
                     <el-button size="small" type="danger" @click="handleDelete(scope.$index, scope.row)">删除</el-button>
@@ -86,12 +85,12 @@ export default {
       callName:function(newVal,oldVal){
         this.tableIsLoading = true;
         this.searchLoading = true;
-        this.getlogList();
+        this.getLogList();
       },
       callApi:function(newVal,oldVal){
         this.tableIsLoading = true;
         this.searchLoading = true;
-        this.getlogList();
+        this.getLogList();
       },
       timeRange:function(newVal,oldVal){
         if(newVal){
@@ -99,13 +98,13 @@ export default {
           this.endTime = newVal[1];
           this.tableIsLoading = true;
           this.searchLoading = true;
-          this.getlogList();
+          this.getLogList();
         }else{
           this.startTime = '';
           this.endTime = '';
           this.tableIsLoading = true;
           this.searchLoading = true;
-          this.getlogList();
+          this.getLogList();
         }
       }
     },
@@ -113,7 +112,7 @@ export default {
         // 分页处理事件
         handleCurrentChange(val) {
             this.currentPage = val;
-            this.getlogList();
+            this.getLogList();
         },
         formatter(row, column, cellValue) {
             return JSON.stringify(cellValue);
@@ -122,7 +121,7 @@ export default {
         search() {
           this.tableIsLoading = true;
           this.searchLoading = true;
-          this.getlogList();
+          this.getLogList();
         },
         export2Excel(){
 
@@ -130,13 +129,13 @@ export default {
         //点击删除按钮
         handleDelete(index, row) {
             this.logIndex = index;
-            this.logID = row.logID;
+            this.logID = row.id;
             this.delVisible = true;
         },
         // 确定删除
         deleteRow() {
             api.delSystemLog({
-                'logIdList':[this.logID]
+                'logId':[this.logID]
             }).then((res) => {
                 if (res.data.status == 'ok') {
                     this.logList.splice(this.logIndex, 1);
@@ -150,14 +149,14 @@ export default {
             })
         },
         //获取用户列表
-        getlogList() {
+        getLogList() {
             var params = {
-                "currentPage": this.currentPage,
-                "pageSize": this.pageSize,
-                "callName":this.callName,
-                "callApi": this.callApi,
-                "startTime":this.startTime,
-                "endTime":this.endTime
+                "current_page": this.currentPage,
+                "page_size": this.pageSize,
+                "user_name":this.callName,
+                "call_api": this.callApi,
+                "start_time":this.startTime,
+                "end_time":this.endTime
             };
             api.getSystemLogList(params).then((res) => {
                 if (res.data.status == 'ok') {
@@ -176,7 +175,7 @@ export default {
     created() {
         this.tableIsLoading = true;
         this.searchLoading = true;
-        this.getlogList();
+        this.getLogList();
     }
 }
 </script>
