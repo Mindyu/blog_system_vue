@@ -1,103 +1,105 @@
 <template>
-  <div id="wrapper">
-    <vheader class="header"></vheader>
-    <div class="main">
-      <router-view class="main-wrapper" transition="fade" transition-mode="out-in"></router-view>
+    <div id="wrapper">
+        <vheader class="header"></vheader>
+        <div class="main">
+            <router-view class="main-wrapper" transition="fade" transition-mode="out-in"></router-view>
+        </div>
+        <vfooter class="footer"></vfooter>
     </div>
-    <vfooter class="footer"></vfooter>
-  </div>
 </template>
 
 <script type="text/babel">
-import Vheader from './Vheader'
-import Vfooter from './Vfooter'
-export default {
-    components: {
-      Vheader,
-      Vfooter
+    import Vheader from './Vheader'
+    import Vfooter from './Vfooter'
+
+    export default {
+        components: {
+            Vheader,
+            Vfooter
+        }
     }
-  }
 </script>
 <style>
-  html {
-    font-size: 10px;
-    height:100%;
-  }
+    html {
+        font-size: 10px;
+        height: 100%;
+    }
 
-  body {
-    -webkit-font-smoothing:antialiased;
-    font-size: 1.6rem;
-    margin: 0;
-    padding: 0;
-    font-family: -apple-system, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
-    color: #404040;
-    line-height: 1.7;
-    height:100%;
-  }
+    body {
+        -webkit-font-smoothing: antialiased;
+        font-size: 1.6rem;
+        margin: 0;
+        padding: 0;
+        font-family: -apple-system, "Helvetica Neue", Arial, "PingFang SC", "Hiragino Sans GB", STHeiti, "Microsoft YaHei", "Microsoft JhengHei", "Source Han Sans SC", "Noto Sans CJK SC", "Source Han Sans CN", "Noto Sans SC", "Source Han Sans TC", "Noto Sans CJK TC", "WenQuanYi Micro Hei", SimSun, sans-serif;
+        color: #404040;
+        line-height: 1.7;
+        height: 100%;
+    }
 
-  #wrapper {
-    display: flex;
-    flex-flow: column;
-    height:100%;
-    overflow:auto;
-  }
+    #wrapper {
+        display: flex;
+        flex-flow: column;
+        height: 100%;
+        overflow: auto;
 
-  body a {
-    text-decoration: none;
-  }
+    }
 
-  .nav a:link, a:visited {
-    color: inherit;
-  }
+    body a {
+        text-decoration: none;
+    }
 
-  body ul, li, p {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-  }
+    .nav a:link, a:visited {
+        color: inherit;
+    }
 
-  * {
-    box-sizing: border-box;
-  }
+    body ul, li, p {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
 
-  .fade-transition {
-    transition: all .4s ease;
-  }
+    * {
+        box-sizing: border-box;
+    }
 
-  .fade-enter, .fade-leave {
-    opacity: 0;
-  }
+    .fade-transition {
+        transition: all .4s ease;
+    }
 
-  .header, .footer {
-    flex: 0 0 auto;
-  }
+    .fade-enter, .fade-leave {
+        opacity: 0;
+    }
 
-  .main {
-    flex: 1 0 auto;
-    order: 1;
-    display: flex;
-    justify-content: center;
-  }
+    .header, .footer {
+        flex: 0 0 auto;
+    }
 
-  .main-wrapper {
-    width: 80%;
-    max-width: 80rem;
-    transition: all .4s;
-  }
+    .main {
+        flex: 1 0 auto;
+        order: 1;
+        display: flex;
+        justify-content: center;
+    }
 
-  .footer {
-    order: 3;
-    display: flex;
-    height: 10rem;
-  }
-
-  @media screen and (max-width: 768px) {
     .main-wrapper {
-      width: 100%;
+        width: 80%;
+        max-width: 110rem;
+        transition: all .4s;
     }
 
     .footer {
-      height: 6rem;
+        order: 3;
+        display: flex;
+        height: 10rem;
     }
-  }
+
+    @media screen and (max-width: 768px) {
+        .main-wrapper {
+            width: 100%;
+        }
+
+        .footer {
+            height: 6rem;
+        }
+    }
 </style>

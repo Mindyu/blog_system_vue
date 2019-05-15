@@ -10,14 +10,15 @@ export default new Router({
     routes: [
         {
             path: '/',
-            redirect: '/home'
+            redirect: '/index'
         },
         {
-            path: '/home',
+            path: '/index',
             component: resolve => require(['../components/page/front/index.vue'], resolve),
             children:[
               {
-                  path: '/home',
+                  name:'index',
+                  path: '/index',
                   component: resolve => require(['../components/page/front/ArticleList.vue'], resolve),
                   meta: {requireAuth:false,requireLogin:false}
               },

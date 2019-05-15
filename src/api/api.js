@@ -53,6 +53,18 @@ export const getBlogList = params => {
 export const getBlogType = params => {
     return axios.get(`${basePath}/blog/type`, params);
 };
+//获取博客类别下博客数量
+export const getBlogCountByType = params => {
+    return axios.get(`${basePath}/blog/typecount`, params);
+};
+//获取博客归档
+export const getBlogPigeonholeCount = params => {
+    return axios.get(`${basePath}/blog/monthcount`, params);
+};
+//获取博客标签
+export const getTagList = params => {
+    return axios.get(`${basePath}/blog/tags`, params);
+};
 //通过ID获取博客详情
 export const getBlogByID = params => {
     return axios.get(`${basePath}/blog/query?blogId=` + params.blogID);

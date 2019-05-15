@@ -1,6 +1,13 @@
 <template>
     <div class="comment">
-        <h1>评论</h1>
+        <div v-if="commentsList.length>0">
+            <h1>评论</h1>
+        </div>
+        <div v-else>
+            <center>
+                <span>还没有评论，你愿意做第一个评论的人嘛？</span>
+            </center>
+        </div>
         <ul class="comments-list">
             <li class="comment-item" v-for="item in commentsList">
                 <div class="comment-item-title">
@@ -15,12 +22,14 @@
 
                 <div v-for="reply_item in item.comment_reply" class="comment-reply-container">
                     <div class="comment-item-title">
-                        <p class="comment-item-name">{{formatName(reply_item.from_username, reply_item.to_username)}}</p>
+                        <p class="comment-item-name">{{formatName(reply_item.from_username,
+                            reply_item.to_username)}}</p>
                         <p class="comment-item-createdAt">{{reply_item.created_at}}</p>
                     </div>
                     <p class="comment-item-content">{{reply_item.reply_content}}</p>
                     <div class="comment-item-reply-wrapper">
-                        <a @click="reply(reply_item.id, reply_item.from_username, 1, item.id)" class="comment-item-reply">回复</a>
+                        <a @click="reply(reply_item.id, reply_item.from_username, 1, item.id)"
+                           class="comment-item-reply">回复</a>
                     </div>
                 </div>
             </li>
@@ -143,8 +152,8 @@
                     console.error(err);
                 })
             },
-            formatName(from_username, to_username){
-                return from_username+"@"+to_username;
+            formatName(from_username, to_username) {
+                return from_username + "@" + to_username;
             }
         },
         created() {

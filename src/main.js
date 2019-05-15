@@ -5,9 +5,12 @@ import axios from 'axios';
 import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';    // 默认主题
 // import '../static/css/theme-green/index.css';  // 浅绿色主题
+import './assets/css/img/iconfont.css';
 import "babel-polyfill";
+import VueParticles from 'vue-particles'
 
 Vue.use(ElementUI, { size: 'small' });
+Vue.use(VueParticles)
 Vue.prototype.$axios = axios;
 
 //使用钩子函数对路由进行权限跳转
