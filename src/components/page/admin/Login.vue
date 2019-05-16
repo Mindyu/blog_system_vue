@@ -57,15 +57,15 @@ export default {
                 api.validUsername({
                     'username': this.addform.username,
                 }).then((res) => {
-                    if (res.data.status == 'ok') {
-                        if (res.data.info == true) {
+                    if (res.data.status === 'ok') {
+                        if (res.data.info === true) {
                             callback();
                         } else {
                             return callback(new Error('用户名已被注册'));
                         }
                     } else {
-                        return callback(new Error('用户名验证失败'));
                         console.error(res.data.errorMsg);
+                        return callback(new Error('用户名验证失败'));
                     }
                 }).catch((err) => {
                     console.error(err);
@@ -76,7 +76,7 @@ export default {
             if (!value) {
                 return callback(new Error('请输入验证码'));
             } else {
-              if(value != this.identifyCode){
+              if(value !== this.identifyCode){
                   return callback(new Error('验证码输入有误'));
               }else{
                   callback();
@@ -142,7 +142,7 @@ export default {
                 if (valid) {
                     this.addLoading = true;
                     api.addUser(this.addform).then((res) => {
-                        if (res.data.status == 'ok') {
+                        if (res.data.status === 'ok') {
                             this.isVisible = false;
                             this.addLoading = false;
                             this.$message.success('注册成功');
@@ -171,7 +171,7 @@ export default {
                         "password": this.ruleForm.password
                     };
                     api.getToken(params).then((res) => {
-                        if (res.data.status == 'ok') {
+                        if (res.data.status === 'ok') {
                             var token = res.data.info.access_token;
                             if (!token) {
                                 this.$message.warning(res.data.info);
