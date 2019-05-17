@@ -20,7 +20,7 @@ export const getUserType = params => {
 };
 //获取某个用户详细信息(通过用户名)
 export const getUserInfo = params => {
-    return axios.post(`${basePath}/user/query`, params);
+    return axios.get(`${basePath}/user/query?username=` + params.username);
 };
 //获取用户的权限和身份信息
 export const getRoleAndAuth = params => {
@@ -130,6 +130,10 @@ export const getFriendList = params => {
 export const delFriend = params => {
     return axios.delete(`${basePath}/friend/delete`, params);
 };
+//新增好友
+export const addFriend = params => {
+    return axios.post(`${basePath}/friend/add`, params);
+};
 
 //********************************关注管理*************************************************
 //获取关注列表
@@ -140,6 +144,29 @@ export const getAttentionList = params => {
 export const delAttention = params => {
     return axios.delete(`${basePath}/attention/delete`, params);
 };
+//新增关注
+export const addAttention = params => {
+    return axios.post(`${basePath}/attention/add`, params);
+};
+
+
+//********************************私信管理*************************************************
+//获取未读私信
+export const getNotReadMsg = params => {
+    return axios.get(`${basePath}/msg/unread?name=` + params.username);
+};
+//获取已读私信
+export const getReadMsg = params => {
+    return axios.get(`${basePath}/msg/read?name=` + params.username);
+};
+//设置私信已阅
+export const setMsgRead = params => {
+    return axios.put(`${basePath}/msg/read?id=` + params.id);
+};
+//新增或者回复私信
+export const addPrivateMsg = params => {
+    return axios.post(`${basePath}/msg/add`, params);
+};
 
 //********************************系统日志***************************************************
 //获取系统日志列表（支持多种条件查询）
@@ -149,6 +176,14 @@ export const getSystemLogList = params => {
 //删除系统日志
 export const delSystemLog = params => {
     return axios.delete(`${basePath}/system/delete?logId=` + params.logId);
+};
+//系统日志量
+export const getSystemLogCount = params => {
+    return axios.get(`${basePath}/system/count`, params);
+};
+//系统访问量
+export const getSystemAccessCount = params => {
+    return axios.get(`${basePath}/system/access`, params);
 };
 
 //*******************************文件上传 ***************************************************

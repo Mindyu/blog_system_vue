@@ -111,8 +111,8 @@ export default new Router({
                 },
                 {
                     path: '/permissiomlist',
-                    component: resolve => require(['../components/page/admin/403.vue'], resolve),
-                    meta: { title: '权限管理',requireAuth:requireAuth,requireLogin:true}
+                    component: resolve => require(['../components/page/admin/PermissionList.vue'], resolve),
+                    meta: { title: '权限管理',requireAuth:true,requireLogin:true}
                 }
             ]
         },

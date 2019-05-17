@@ -4,20 +4,20 @@
             <el-col :span="8">
                 <el-row>
                     <el-col>
-                        <el-card shadow="hover" class="mgb20 userinfo">
+                        <el-card shadow="hover" class="mgb20 userinfo" v-model="userDetail">
                             <div class="user-info">
-                                <img src="static/img/img.jpg" class="user-avator" alt="">
+                                <img v-if="userDetail" :src="formatUrl(userDetail.avatar)" class="user-avator" alt="">
                                 <div class="user-info-cont">
-                                    <div class="user-info-name">{{name}}</div>
+                                    <div class="user-info-name">{{userDetail.username}}</div>
                                     <div>{{role}}</div>
                                 </div>
                             </div>
-                            <div class="user-info-list">手机：<span>15623704177</span></div>
-                            <div class="user-info-list">邮箱：<span>2240913573@qq.com</span></div>
-                            <div class="user-info-list">生日：<span>1995-10-14</span></div>
-                            <div class="user-info-list">学历：<span>大学本科</span></div>
-                            <div class="user-info-list">爱好：<span>爱好爱好爱好</span></div>
-                            <div class="user-info-list">签名：<span>不要放弃治疗</span></div>
+                            <div class="user-info-list">手机：<span>{{userDetail.phone}}</span></div>
+                            <div class="user-info-list">邮箱：<span>{{userDetail.email}}</span></div>
+                            <div class="user-info-list">生日：<span>{{userDetail.birthday}}</span></div>
+                            <div class="user-info-list">学历：<span>{{userDetail.education}}</span></div>
+                            <div class="user-info-list">爱好：<span>{{userDetail.hobby}}</span></div>
+                            <div class="user-info-list">签名：<span>{{userDetail.sign}}</span></div>
                         </el-card>
                     </el-col>
                 </el-row>
@@ -29,7 +29,7 @@
                             <div class="grid-content grid-con-1">
                                 <i class="el-icon-view grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">1234</div>
+                                    <div class="grid-num">{{accessCount}}</div>
                                     <div>用户访问量</div>
                                 </div>
                             </div>
@@ -40,8 +40,8 @@
                             <div class="grid-content grid-con-2">
                                 <i class="el-icon-message grid-con-icon"></i>
                                 <div class="grid-cont-right">
-                                    <div class="grid-num">321</div>
-                                    <div>系统消息</div>
+                                    <div class="grid-num">{{logCount}}</div>
+                                    <div>系统日志数量</div>
                                 </div>
                             </div>
                         </el-card>
@@ -60,7 +60,9 @@
                         </el-table-column>
                         <el-table-column>
                             <template slot-scope="scope">
-                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">{{scope.row.title}}</div>
+                                <div class="todo-item" :class="{'todo-item-del': scope.row.status}">
+                                    {{scope.row.title}}
+                                </div>
                             </template>
                         </el-table-column>
                         <el-table-column width="80">
@@ -76,10 +78,15 @@
 </template>
 
 <script>
+    import api from '@/api';
+
     export default {
         data() {
             return {
-                name: localStorage.getItem('ms_username'),
+                userDetail: '',
+                imagePath: '',
+                logCount:0,
+                accessCount:0,
                 todoList: [
                     {
                         title: '今天要修复100个bug',
@@ -106,20 +113,62 @@
         },
         computed: {
             role() {
-                return this.name === 'zhangchunhui' ? '管理员' : '普通用户';
+                return localStorage.getItem('role') === 'admin' ? '管理员' : '普通用户';
             }
         },
-        methods:{
-          add(){
-            this.$notify({title: '添加',
-              message: '代办事项添加还在开发中..',
-              type: 'success'
-            });
-          },
-          del(index,row){
-            this.$delete(this.todoList,index);
-            this.$message.success('删除成功');
-          }
+        methods: {
+            add() {
+                this.$notify({
+                    title: '添加',
+                    message: '代办事项添加还在开发中..',
+                    type: 'success'
+                });
+            },
+            del(index, row) {
+                this.$delete(this.todoList, index);
+                this.$message.success('删除成功');
+            },
+            formatUrl(val) {
+                return this.imagePath + val;
+            },
+            getUserInfo() {
+                var params = {
+                    "username": localStorage.getItem('ms_username'),
+                };
+                api.getUserInfo(params).then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.userDetail = res.data.info;
+                    } else {
+                        this.$message.warning(res.data.info);
+                    }
+                }).catch((err) => {
+                    console.log('获取用户信息出错', res.data.err_msg);
+                });
+            },
+            getLogCount(){
+                api.getSystemLogCount().then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.logCount = res.data.info;
+                    }
+                }).catch((err) => {
+                    console.log('获取日志数量', res.data.err_msg);
+                });
+            },
+            getAccessCount(){
+                api.getSystemAccessCount().then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.accessCount = res.data.info;
+                    }
+                }).catch((err) => {
+                    console.log('获取系统访问量', res.data.err_msg);
+                });
+            }
+        },
+        created() {
+            this.imagePath = api.uploadURL;
+            this.getUserInfo();
+            this.getLogCount();
+            this.getAccessCount();
         }
     }
 
@@ -230,7 +279,8 @@
         text-decoration: line-through;
         color: #999;
     }
-    .userinfo{
-      height: 525px;
+
+    .userinfo {
+        height: 525px;
     }
 </style>

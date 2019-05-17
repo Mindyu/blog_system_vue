@@ -6,6 +6,13 @@
             </el-breadcrumb>
         </div>
         <div class="container">
+            <div class="handle-box">
+                <el-input v-model="searchWords" placeholder="输入用户名,昵称进行检索" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="search" :loading="searchLoading">搜索</el-button>
+                <el-button type="success" icon="el-icon-check" @click="findUserDialog"
+                           class="handle-right-btn">查找
+                </el-button>
+            </div>
             <el-table :data="attentionList" border style="width: 100%"
                       v-loading="tableIsLoading" element-loading-text="拼命加载中"
                       element-loading-spinner="el-icon-loading"
@@ -50,6 +57,50 @@
         <el-dialog :title="dialogTitle" :visible.sync="previewDialogVisible" modal :lock-scroll="false">
             <img :src="previewImgURL" class="pre-img"/>
         </el-dialog>
+
+        <!-- 好友搜索框 -->
+        <el-dialog title="寻找好友" :visible.sync="findVisible" width="80%" v-loading="findLoading">
+            <div class="handle-box">
+                <el-input v-model="findWords" placeholder="输入用户名,昵称进行搜索" class="handle-input mr10"></el-input>
+                <el-button type="primary" icon="el-icon-search" @click="findUser" :loading="findLoading">搜索</el-button>
+            </div>
+            <el-table :data="userList" border style="width: 100%"
+                      v-loading="dialogIsLoading" element-loading-text="拼命加载中"
+                      element-loading-spinner="el-icon-loading"
+                      element-loading-background="rgba(0.8, 0.8, 0.8, 0.8)"
+                      ref="multipleTable">
+                <el-table-column type="index" width="80" label="序号"></el-table-column>
+                <el-table-column prop="username" label="用户名" width="120" sortable></el-table-column>
+                <el-table-column prop="nickname" label="用户昵称" width="120" show-overflow-tooltip></el-table-column>
+                <el-table-column label="头像" width="60">
+                    <template slot-scope="scope">
+                        <img :src="getImgUrl(scope.row.avatar)" class="user-avator" @click="viewAvatar(scope.row)">
+                    </template>
+                </el-table-column>
+                <el-table-column prop="phone" label="好友手机" width="120"></el-table-column>
+                <el-table-column prop="email" label="好友邮箱" width="140"></el-table-column>
+                <el-table-column prop="hobby" label="好友爱好" width="120" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="sign" label="好友签名" width="120" show-overflow-tooltip></el-table-column>
+                <el-table-column prop="created_at" label="添加日期" width="140"></el-table-column>
+                <el-table-column label="操作" width="80">
+                    <template slot-scope="scope">
+                        <el-button size="small" type="primary" @click="handleAttention(scope.$index, scope.row)">关注
+                        </el-button>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <div class="pagination">
+                <el-pagination @current-change="handleCurrentPageChange"
+                               :current-page.sync="currentUserPage"
+                               layout="total, prev, pager, next, jumper"
+                               :page-size="pageUserSize"
+                               :total="totalUserNum">
+                </el-pagination>
+            </div>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="findVisible = false">取 消</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
@@ -77,14 +128,81 @@
                 previewImgURL: '',
                 sortType: '',
                 dialogTitle: '',
+
+                currentUserPage: 1,
+                totalUserNum: 100,
+                pageUserSize: 5,
+                userList: [],
+                // 搜索好友提示框
+                findWords: '',
+                findVisible: false,
+                dialogIsLoading: false,
+                findLoading: false,
             }
         },
         watch: {
             searchWords: function (newVal, oldVal) {
                 this.getAttentionList();
             },
+            findWords: function (newVal, oldVal) {
+                this.getUserInfoList();
+            }
         },
         methods: {
+            findUserDialog() {
+                this.findVisible = true;
+                this.getUserInfoList();
+            },
+            findUser() {
+                this.getUserInfoList();
+            },
+            getUserInfoList() {
+                var params = {
+                    "current_page": this.currentUserPage,
+                    "page_size": this.pageUserSize,
+                    "search_words": this.findWords
+                };
+                api.getUserList(params).then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.totalUserNum = res.data.info.totalNum;
+                        this.userList = res.data.info.list;
+                        this.dialogIsLoading = false;
+                        this.findLoading = false;
+                        //初始avatarURL
+                        let token = tripledesUtil.decrypt(localStorage.getItem('token'));
+                        for (let i = 0; i < this.userList.length; i++) {
+                            this.userList[i].avatar = this.userList[i].avatar + '?token=' + token;
+                        }
+                    } else {
+                        this.$message(res.data.errMsg)
+                    }
+                }).catch((err) => {
+                    console.error(err);
+                })
+            },
+            handleAttention(index, row) {
+                console.info(row.username);
+                var params = {
+                    'focus_user': localStorage.getItem('ms_username'),
+                    'focused_user': row.username
+                }
+                api.addAttention(params).then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.$message.success('关注成功');
+                        this.getAttentionList();
+                    } else {
+                        this.$message.info('关注失败');
+                    }
+                }).catch((err) => {
+                    console.error(err);
+                })
+            },
+            // 分页处理事件
+            handleCurrentPageChange(val) {
+                this.currentUserPage = val;
+                this.dialogIsLoading = true;
+                this.getUserInfoList();
+            },
             getImgUrl(val) {
                 return api.uploadURL + val;
             },
@@ -116,7 +234,7 @@
                     }
                 }
                 api.delAttention(params).then((res) => {
-                    if (res.data.status == 'ok') {
+                    if (res.data.status === 'ok') {
                         this.attentionList.splice(this.attentionIndex, 1);
                         this.$message.success('删除成功');
                         this.delVisible = false;
@@ -135,8 +253,8 @@
             //获取列表
             getAttentionList() {
                 var params = {
-                    // "sortType": this.sortType,
-                    "search_words": localStorage.getItem('ms_username'),
+                    "username": localStorage.getItem('ms_username'),
+                    "search_words": this.searchWords,
                     "current_page": this.currentPage,
                     "page_size": this.pageSize
                 };
@@ -168,9 +286,21 @@
 </script>
 
 <style scoped>
+    .handle-box {
+        margin-bottom: 20px;
+    }
 
     .handle-select {
         width: 120px;
+    }
+
+    .handle-input {
+        width: 300px;
+        display: inline-block;
+    }
+
+    .handle-right-btn {
+        float: right;
     }
 
     .del-dialog-cnt {
