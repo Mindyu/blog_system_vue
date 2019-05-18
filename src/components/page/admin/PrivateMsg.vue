@@ -101,12 +101,12 @@
     import api from '@/api';
 
     export default {
-        data() {
+        data: function() {
             return {
                 message: 'first',
                 showHeader: false,
-                unreadMsg: '',
-                readMsg: '',
+                unreadMsg: [],
+                readMsg: [],
                 msg: '',
                 msgVisible: false,
                 readonly: true,

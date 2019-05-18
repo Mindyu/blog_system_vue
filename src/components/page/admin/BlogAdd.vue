@@ -211,7 +211,7 @@
                     if (res.data.status === 'ok') {
                         this.blogTypeList = res.data.info;
                     } else {
-                        this.$message(res.data.errMsg)
+                        this.$message(res.data.err_msg)
                         //console.log(res.data.errMsg);
                     }
                 }).catch((err) => {

@@ -11,7 +11,7 @@
 </template>
 
 <script type="text/babel">
-    import api from '@/api';
+    import * as api from '../../../api/front';
 
     export default {
         data() {

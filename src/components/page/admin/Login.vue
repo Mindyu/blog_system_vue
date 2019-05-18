@@ -197,7 +197,6 @@
                                         localStorage.setItem('role', role.role_name);
                                         console.log("用户信息获取成功" + localStorage.getItem('role'));
                                         this.$router.push('/admin');
-                                        this.isLoading = false;
                                     } else {
                                         this.$message.warning(res.data.info);
                                     }
@@ -205,8 +204,10 @@
                                     console.log('获取权限和身份接口出错', res.data.errMsg);
                                 });
                             } else {
-                                console.log('获取token接口出错', res.data.errMsg);
+                                console.log('获取token接口出错', res.data.err_msg);
+                                this.$message.warning(res.data.err_msg);
                             }
+                            this.isLoading = false;
                         }).catch((err) => {
                             console.error(err);
                             this.isLoading = false;

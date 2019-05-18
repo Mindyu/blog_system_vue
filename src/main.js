@@ -26,9 +26,9 @@ router.beforeEach((to, from, next) => {
                     confirmButtonText: '确定'
                 });
             }
-            if (to.meta.requireAuth) {
+            if (to.meta.requireAuth) {  // 请求控制
                 const role = localStorage.getItem('role');
-                role === 'admin' ? next() : next('/403');
+                (role === 'admin'||role === 'superadmin') ? next() : next('/403');
             } else {
                 next();
             }

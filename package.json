@@ -2,7 +2,7 @@
   "name": "blog-system",
   "version": "3.1.0",
   "description": "基于Vue.js 2 的个人博客系统",
-  "author": "lin-xin <704191988@qq.com>",
+  "author": "Mindyu <704191988@qq.com>",
   "private": true,
   "scripts": {
     "dev": "webpack-dev-server --inline --progress --config build/webpack.dev.conf.js",

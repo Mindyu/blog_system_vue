@@ -31,7 +31,7 @@
             </div>
             <ul class="list-container" id="list-ul">
                 <li v-for="(item,index) in blogList">
-                    <router-link :to="{ name: 'article', query: {'articleId':item.id}}">
+                    <router-link :to="{ name: 'article', query: {'articleId':item.id,'articleAuthor':item.author}}">
                         <p class="list-title">{{item.blog_title}}</p>
                         <p class="list-updated"><i class="iconfont icon-author"></i>{{item.author}}</p>
                         <p class="list-abstract"><i class="iconfont icon-37tag"></i>{{item.keywords}}</p>
@@ -59,7 +59,7 @@
 </template>
 
 <script type="text/babel">
-    import api from '@/api';
+    import * as api from '../../../api/front';
     import moment from "moment";
 
     export default {
@@ -177,7 +177,7 @@
 </script>
 
 <style scoped>
-    .btn{
+    .btn {
         padding: 10px;
         width: 80px;
         background: #f5f5f5;
@@ -187,7 +187,7 @@
         border: 1px solid #CCCCCC;
     }
 
-    .isActive{
+    .isActive {
         background: #8b8b8b;
     }
 

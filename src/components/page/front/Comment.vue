@@ -47,7 +47,7 @@
     </div>
 </template>
 <script type="text/babel">
-    import api from '@/api';
+    import * as api from '../../../api/front';
 
     export default {
         props: {
@@ -64,6 +64,7 @@
                 replyType: 0,
                 replyName: '',
                 articleId: 0,
+                articleAuthor: '',
                 commentId: 0,
                 commentsList: [],
                 title: '评论'
@@ -81,6 +82,7 @@
                     const params = {
                         "blog_id": this.articleId,
                         "blog_title": this.blogTitle,
+                        "blog_author": this.articleAuthor,      // 作者
                         "comment_content": this.formContent,
                         "comment_username": this.formName
                     }
@@ -158,6 +160,7 @@
         },
         created() {
             this.articleId = this.$route.query.articleId;
+            this.articleAuthor = this.$route.query.articleAuthor;
             this.getComments();
         },
     }

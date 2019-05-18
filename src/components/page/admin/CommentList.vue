@@ -94,7 +94,7 @@
             // 确定删除
             deleteRow() {
                 api.delCommentByID({'commentID': this.commentID}).then((res) => {
-                    if (res.data.status == 'ok') {
+                    if (res.data.status === 'ok') {
                         this.commentList.splice(this.commentIndex, 1);
                         this.$message.success('删除成功');
                         this.delVisible = false;
@@ -118,7 +118,7 @@
                         commentIdList.push(this.multipleSelection[i].id);
                     }
                     api.delCommentList({'commentIdList': commentIdList}).then((res) => {
-                        if (res.data.status == 'ok') {
+                        if (res.data.status === 'ok') {
                             this.$message.success('删除了' + length + '条评论');
                             this.multipleSelection = [];
                             this.getCommentList();

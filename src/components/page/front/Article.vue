@@ -12,7 +12,7 @@
     import Prism from 'prismjs'
     import 'prismjs/themes/prism.css'
     import Comment from './Comment'
-    import api from '@/api';
+    import * as api from '../../../api/front';
     import bus from '@/components/common/bus'
 
     marked.setOptions({

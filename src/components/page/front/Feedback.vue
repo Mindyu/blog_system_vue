@@ -16,8 +16,6 @@
     </div>
 </template>
 <script>
-    import api from '@/api';
-
     export default {
         name: 'error',
         data() {
