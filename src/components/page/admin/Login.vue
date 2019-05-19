@@ -26,7 +26,7 @@
                     <el-input v-model="addform.username"></el-input>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
-                    <el-input v-model="addform.password"></el-input>
+                    <el-input type="password" v-model="addform.password"></el-input>
                 </el-form-item>
                 <el-form-item label="昵称" prop="nickname">
                     <el-input v-model="addform.nickname"></el-input>
