@@ -47,7 +47,10 @@
                         </el-card>
                     </el-col>
                 </el-row>
-                <el-card shadow="hover" :body-style="{ height: '304px'}">
+
+                <div class="chart" id="mainChart"></div>
+
+                <!--<el-card shadow="hover" :body-style="{ height: '304px'}">
                     <div slot="header" class="clearfix">
                         <span>待办事项</span>
                         <el-button style="float: right; padding: 3px 0" type="text" @click="add">添加</el-button>
@@ -71,7 +74,8 @@
                             </template>
                         </el-table-column>
                     </el-table>
-                </el-card>
+                </el-card>-->
+
             </el-col>
         </el-row>
     </div>
@@ -79,6 +83,7 @@
 
 <script>
     import api from '@/api';
+    var echarts = require('echarts')
 
     export default {
         data() {
@@ -87,6 +92,7 @@
                 imagePath: '',
                 logCount:0,
                 accessCount:0,
+                statsList:[],
                 todoList: [
                     {
                         title: '今天要修复100个bug',
@@ -115,6 +121,9 @@
             role() {
                 return localStorage.getItem('role') === 'admin' ? '管理员' : '普通用户';
             }
+        },
+        mounted() {
+            this.getAccessStats();
         },
         methods: {
             add() {
@@ -160,7 +169,34 @@
                         this.accessCount = res.data.info;
                     }
                 }).catch((err) => {
-                    console.log('获取系统访问量', res.data.err_msg);
+                    console.log('获取系统访问量失败', res.data.err_msg);
+                });
+            },
+            getAccessStats(){
+                api.getSystemAccessWeek().then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.initChart(res.data.info);
+                    }
+                }).catch((err) => {
+                    console.log('获取访问量统计表失败', res.data.err_msg);
+                });
+            },
+            initChart(data){
+                //echarts 实例化
+                var myChart = echarts.init(document.getElementById('mainChart'));
+                // 基于准备好的dom，初始化echarts实例
+                myChart.setOption({
+                    title: { text: '访问量统计' },
+                    tooltip: {},
+                    xAxis: {
+                        data: data["day"].split(","),
+                    },
+                    yAxis: {},
+                    series: [{
+                        name: '访问量',
+                        type: 'line',
+                        data: data["count"].split(","),
+                    }]
                 });
             }
         },
@@ -282,5 +318,11 @@
 
     .userinfo {
         height: 525px;
+    }
+
+    .chart {
+        width: 100%;
+        height: 400px;
+        padding-top: 10px;
     }
 </style>

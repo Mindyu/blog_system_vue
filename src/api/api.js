@@ -53,6 +53,10 @@ export const getBlogList = params => {
 export const getBlogType = params => {
     return axios.get(`${basePath}/blog/type`, params);
 };
+//添加博客类型
+export const addBlogType = params => {
+    return axios.post(`${basePath}/blog/type/add`, params);
+};
 //获取博客类别下博客数量
 export const getBlogCountByType = params => {
     return axios.get(`${basePath}/blog/typecount`, params);
@@ -184,6 +188,10 @@ export const getSystemLogCount = params => {
 //系统访问量
 export const getSystemAccessCount = params => {
     return axios.get(`${basePath}/system/access`, params);
+};
+//系统天访问量统计
+export const getSystemAccessWeek = params => {
+    return axios.get(`${basePath}/system/access/week`, params);
 };
 
 //*******************************文件上传 ***************************************************

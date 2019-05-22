@@ -19,6 +19,7 @@
                                 <el-option :key="type.id" :label="type.type_name" :value="type.id"></el-option>
                             </template>
                         </el-select>
+                        <el-button type="primary" v-if="hasAuthView()" icon="el-icon-circle-plus" @click="showDialog">新增</el-button>
                     </el-form-item>
                     <el-form-item label="关键字:" prop="keywords">
                         <el-tag :key="tag" v-for="tag in addForm.keywords" closable :disable-transitions="false"
@@ -55,6 +56,23 @@
             <el-button class="editor-btn" type="primary" @click="saveTemp">保存草稿</el-button>
             <el-button class="editor-btn" type="primary" @click="submit">提交</el-button>
         </div>
+
+        <!-- 新增弹出框 -->
+        <el-dialog title="新增博客类别" :visible.sync="addVisible" width="40%" v-loading="addLoading">
+            <el-form ref="addform" :model="addTypeForm" :rules="addTypeRules" status-icon label-width="50px">
+                <el-form-item label="名称">
+                    <el-input v-model="addTypeForm.type_name"></el-input>
+                </el-form-item>
+                <el-form-item label="备注">
+                    <el-input v-model="addTypeForm.note"></el-input>
+                </el-form-item>
+            </el-form>
+            <span slot="footer" class="dialog-footer">
+            <el-button @click="addVisible = false">取 消</el-button>
+            <el-button type="primary" @click="addBlogType">确 定</el-button>
+        </span>
+        </el-dialog>
+
     </div>
 </template>
 
@@ -91,6 +109,16 @@
                 },
                 operateType: 'add',
                 blog_id: '',
+                addVisible: false,
+                addLoading: false,
+                addTypeForm: {
+                    type_name: '',
+                    note: '',
+                },
+                addTypeRules: {
+                    type_name: [{required: true, message: '请输入类别名称', trigger: 'blur'}],
+                    note: [{required: true, message: '请输入备注', trigger: 'blur'}],
+                },
             }
         },
         components: {
@@ -260,6 +288,32 @@
                 } else {
                     this.$route.meta.title = '新增博客';
                 }
+            },
+            showDialog() {
+                this.addTypeForm = {
+                    type_name: '',
+                    note: '',
+                };
+                this.addVisible = true;
+            },
+            addBlogType() {
+                this.addLoading = true;
+                api.addBlogType(this.addTypeForm).then((res) => {
+                    if (res.data.status === 'ok') {
+                        this.addVisible = false;
+                        this.addLoading = false;
+                        this.$message.success('添加成功');
+                        this.getBlogType();
+                    } else {
+                        this.$message.info(res.data.errMsg);
+                    }
+                }).catch((err) => {
+                    this.$message.info('添加类别出错');
+                })
+            },
+            hasAuthView(){
+                let role = localStorage.getItem("role");
+                return role === "admin" || role === "superadmin"
             }
         },
         created() {
