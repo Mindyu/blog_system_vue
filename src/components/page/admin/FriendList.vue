@@ -264,7 +264,7 @@
                         'user_name': localStorage.getItem('ms_username'),
                         'friend_name': this.friendName
                     }
-                }
+                };
                 api.delFriend(params).then((res) => {
                     if (res.data.status === 'ok') {
                         this.friendList.splice(this.friendIndex, 1);

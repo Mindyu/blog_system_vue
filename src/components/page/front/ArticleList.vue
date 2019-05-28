@@ -2,6 +2,11 @@
     <div class="centers">
         <div class="c_left">
             <div class="cart-list-item">
+                <div class="account-info-label">搜索</div>
+                <el-input v-model="searchWords" placeholder="输入标题,关键字,作者进行检索"></el-input>
+            </div>
+
+            <div class="cart-list-item">
                 <div class="account-info-label">分类</div>
                 <ul>
                     <li v-for="(item,index) in blogCountByTypeList" @click="setTypeId(item.type_id)">
@@ -80,6 +85,12 @@
                     {name: '按评论量', id: 2},
                 ],
                 isChange: 0,
+            }
+        },
+        watch: {
+            searchWords:function(newVal,oldVal){
+                this.tableIsLoading = true;
+                this.getBlogList();
             }
         },
         methods: {
