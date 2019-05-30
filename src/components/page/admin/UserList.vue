@@ -96,6 +96,7 @@
                     <el-col :span="12">
                         <el-upload class="avatar-uploader"
                                    :action="uploadURL"
+                                   accept="image/jpeg,image/png,image/jpg"
                                    :show-file-list="false"
                                    :on-success="handleAvatarSuccess"
                                    :before-upload="beforeAvatarUpload">
@@ -436,16 +437,18 @@
                 this.$message.success('上传成功');
             },
             beforeAvatarUpload(file) {
-                const isJPG = file.type === 'image/jpeg' || 'image/gif' || 'image/png';
+                const isJPG = file.type === 'image/jpeg' || 'image/jpg' || 'image/png';
                 const isLt2M = file.size / 1024 / 1024 < 2;
 
                 if (!isJPG) {
                     this.$message.error('上传文件只能是图片格式!');
+                    return false;
                 }
                 if (!isLt2M) {
                     this.$message.error('上传头像图片大小不能超过 2MB!');
+                    return false;
                 }
-                return isJPG && isLt2M;
+                return true;
             }
         },
         created() {
@@ -453,7 +456,7 @@
             this.searchLoading = true;
             this.getUserList();
             this.getUserType();
-            this.uploadURL = api.uploadURL + "upload";
+            this.uploadURL = api.uploadURL + "upload?token=" + tripledesUtil.decrypt(localStorage.getItem('token'));
             this.imagePath = api.uploadURL;
         }
     }

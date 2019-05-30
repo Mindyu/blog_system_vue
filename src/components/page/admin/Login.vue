@@ -14,7 +14,7 @@
                     <el-button type="primary" @click="submitForm('ruleForm')" :loading="isLoading">登录</el-button>
                 </div>
                 <div class="register-btn">
-                    <el-button type="text" @click="isVisible = true">注册</el-button>
+                    <el-button type="text" @click="showAddForm()">注册</el-button>
                 </div>
             </el-form>
         </div>
@@ -44,7 +44,7 @@
                 </el-form-item>
             </el-form>
             <span slot="footer" class="dialog-footer">
-            <el-button @click="isVisible = false">取 消</el-button>
+            <el-button @click="canlceAddForm()">取 消</el-button>
             <el-button type="primary" @click="addUser">确 定</el-button>
         </span>
         </el-dialog>
@@ -158,6 +158,7 @@
                                     username: '',
                                     password: '',
                                     nickname: '',
+                                    validCode: ''
                                 };
                             } else {
                                 this.$message.info(res.data.errMsg);
@@ -169,7 +170,18 @@
                     }
                 })
             },
-
+            showAddForm(){
+                this.isVisible = true;
+            },
+            canlceAddForm(){
+                this.isVisible = false;
+                this.addform = {
+                    username: '',
+                    password: '',
+                    nickname: '',
+                    validCode: ''
+                };
+            },
             submitForm(formName) {
                 this.$refs[formName].validate((valid) => {
                     if (valid) {

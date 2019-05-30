@@ -184,7 +184,7 @@
                                 console.error(err);
                             });
                         } else {
-                            var params = {
+                            let params = {
                                 "blog_title": this.addForm.blog_title,
                                 "keywords": this.addForm.keywords.toString(),
                                 "blog_content": this.addForm.blog_content,

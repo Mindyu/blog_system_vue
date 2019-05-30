@@ -32,12 +32,11 @@ axios.interceptors.response.use(
     //返回异常的预处理
     error => {
         if (error.response) {
-            switch (error.response.status) {
-                case 401: sessionStorage.clear();
-                          alert('身份已过期，请重新登录');
-                          localStorage.clear();
-                          window.location.pathname = '/login';
-                          break;
+            if (error.response.status === 401) {
+                sessionStorage.clear();
+                alert('身份已过期，请重新登录');
+                localStorage.clear();
+                window.location.pathname = '/login';
             }
         }
         return Promise.reject(error.response)

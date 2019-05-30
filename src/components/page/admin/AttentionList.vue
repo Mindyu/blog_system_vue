@@ -191,7 +191,7 @@
                         this.$message.success('关注成功');
                         this.getAttentionList();
                     } else {
-                        this.$message.info('关注失败');
+                        this.$message.info(res.data.err_msg);
                     }
                 }).catch((err) => {
                     console.error(err);
