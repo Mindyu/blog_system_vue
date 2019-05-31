@@ -3,7 +3,15 @@
         <div class="c_left">
             <div class="cart-list-item">
                 <div class="account-info-label">搜索</div>
-                <el-input v-model="searchWords" placeholder="输入标题,关键字,作者进行检索"></el-input>
+                <!--<el-input v-model="searchWords" placeholder="输入标题,关键字,作者进行检索"></el-input>-->
+                <el-autocomplete
+                    class="search-key-input"
+                    v-model="searchKeys"
+                    :fetch-suggestions="querySearchAsync"
+                    @select="handleSelect"
+                    placeholder="输入标题,关键字,作者进行检索"
+                >
+                </el-autocomplete>
             </div>
 
             <div class="cart-list-item">
@@ -78,6 +86,7 @@
                 blogCountByTimeList: [],
                 blogTypeId: 0,
                 searchWords: '',
+                searchKeys: '',
                 loading: false,
                 sortType: 0, // 排序方式，0默认，1阅读量，2评论量
                 sortMsg: [{name: '默认', id: 0},
@@ -88,7 +97,7 @@
             }
         },
         watch: {
-            searchWords:function(newVal,oldVal){
+            searchWords: function (newVal, oldVal) {
                 this.tableIsLoading = true;
                 this.getBlogList();
             }
@@ -177,6 +186,43 @@
                     console.error(err);
                 })
             },
+            handleSelect(item) {
+                if (item.uuid === -1){
+                    return;
+                }
+                this.searchWords = this.searchKeys;
+                getBlogList();
+            },
+            querySearchAsync(queryString, callback) {
+                if (this.searchKeys.length < 2) {
+                    callback(null);
+                    return;
+                }
+                let list = [{}];
+                var params = {
+                    "key": this.searchKeys,
+                };
+                //从后台获取到对象数组
+                api.getKeySug(params).then((res) => {
+                    if (res.data.status === 'ok') {
+                        if (res.data.info == null) {
+                            list.push({uuid: -1, value: "未搜索到结果"});
+                            callback(list);
+                            return
+                        }
+                        //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+                        for (let i of res.data.info) {
+                            list.push({value: i})
+                        }
+                        console.info(res.data.info);
+                        callback(list);
+                    } else {
+                        console.error(res.data.err_msg);
+                    }
+                }).catch((error) => {
+                    console.log(error);
+                });
+            }
         },
         created() {
             this.searchWords = this.$route.query.tagName == null ? "" : this.$route.query.tagName;
@@ -273,19 +319,23 @@
 
     .centers .c_left {
         float: left;
-        width: 20%;
+        width: 22%;
         margin-right: 3%;
     }
 
     .centers .c_right {
         float: left;
-        width: 77%;
+        width: 75%;
     }
 
     .account-info-label {
         width: 100%;
         padding: 5px 0;
         background: #F5F5F5;
+    }
+
+    .search-key-input {
+        width: 100%;
     }
 
     .sidenav-drawer .sidenav-drawer-content {
@@ -312,7 +362,6 @@
     .cart-list-item {
         margin: 10px;
         vertical-align: top;
-        padding: 0px;
     }
 
     .account-info-label {

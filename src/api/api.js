@@ -185,6 +185,10 @@ export const delSystemLog = params => {
 export const getSystemLogCount = params => {
     return axios.get(`${basePath}/system/count`, params);
 };
+//系统日志量
+export const exportLogCsv = params => {
+    return axios.get(`${basePath}/system/export`, params);
+};
 //系统访问量
 export const getSystemAccessCount = params => {
     return axios.get(`${basePath}/system/access`, params);

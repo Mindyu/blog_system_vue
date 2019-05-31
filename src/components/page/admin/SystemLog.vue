@@ -17,7 +17,7 @@
                                 :picker-options="setPickerOptions">
                 </el-date-picker>
                 <el-button type="primary" icon="el-icon-search" @click="search" :loading="searchLoading">搜索</el-button>
-                <!--<el-button type="primary" icon="el-icon-search" @click="export2Excel" :loading="exportLoading">搜索</el-button>-->
+                <el-button type="primary" icon="el-icon-circle-plus" @click="export2Csv" :loading="exportLoading">导出</el-button>
             </div>
             <el-table :data="logList" border
                       v-loading="tableIsLoading" element-loading-text="拼命加载中"
@@ -131,8 +131,21 @@
                 this.searchLoading = true;
                 this.getLogList();
             },
-            export2Excel() {
-
+            export2Csv: function () {
+                this.exportLoading = true;
+                api.exportLogCsv({responseType: "arraybuffer"}).then((res) => {
+                    let headers = res.headers;
+                    let blob = new Blob([res.data], {
+                        type: headers["content-type"]
+                    });
+                    let link = document.createElement("a");
+                    link.href = window.URL.createObjectURL(blob);
+                    link.download = "系统操作日志.csv";
+                    link.click();
+                }).catch((err) => {
+                    console.error(err);
+                });
+                this.exportLoading = false;
             },
             //点击删除按钮
             handleDelete(index, row) {
@@ -145,7 +158,7 @@
                 api.delSystemLog({
                     'logId': [this.logID]
                 }).then((res) => {
-                    if (res.data.status == 'ok') {
+                    if (res.data.status === 'ok') {
                         this.logList.splice(this.logIndex, 1);
                         this.$message.success('删除成功');
                         this.delVisible = false;
@@ -167,13 +180,13 @@
                     "end_time": this.endTime
                 };
                 api.getSystemLogList(params).then((res) => {
-                    if (res.data.status == 'ok') {
+                    if (res.data.status === 'ok') {
                         this.totalNum = res.data.info.totalNum;
                         this.logList = res.data.info.list;
                         this.tableIsLoading = false;
                         this.searchLoading = false;
                     } else {
-                        this.$message(res.data.errMsg)
+                        this.$message(res.data.err_msg)
                     }
                 }).catch((err) => {
                     console.error(err);

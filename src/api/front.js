@@ -8,6 +8,10 @@ let basePath = 'http://localhost:8081';
 export const getBlogList = params => {
     return axios.post(`${basePath}/front/blog/list`, params);
 };
+//按搜索条件sug
+export const getKeySug = params => {
+    return axios.get(`${basePath}/front/blog/sug?key=` + params.key);
+};
 //获取博客类别下博客数量
 export const getBlogCountByType = params => {
     return axios.get(`${basePath}/front/blog/typecount`, params);
