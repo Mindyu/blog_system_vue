@@ -43,7 +43,7 @@
                       @click="isChoose(index,item)">{{item.name}}</span>
             </div>
             <ul class="list-container" id="list-ul">
-                <li v-for="(item,index) in blogList">
+                <li v-for="(item,index) in blogList" @click="readCountUp(item.id,index)">
                     <router-link :to="{ name: 'article', query: {'articleId':item.id,'articleAuthor':item.author}}">
                         <p class="list-title">{{item.blog_title}}</p>
                         <p class="list-updated"><i class="iconfont icon-author"></i>{{item.author}}</p>
@@ -55,7 +55,7 @@
                         <span style="cursor:pointer"><i class="iconfont icon-reply"></i> {{item.reply_count}}</span>&nbsp;
                         <!--<span @click="thumup(item.id,index)" style="cursor:pointer">👍{{item.thumb_up}} </span>&nbsp;&nbsp;
                         <span @click="thumDown(item.id,index)" style="cursor:pointer">😔{{item.thumb_down}}</span>&nbsp;-->&nbsp;
-                        {{dateFormat(item.updated_at)}}
+                        {{dateFormat(item.created_at)}}
                     </p>
                 </li>
             </ul>
@@ -109,7 +109,11 @@
             },
             thumDown(blogID, index) {
                 this.blogList[index].thumb_down += 1;
+            },
+            readCountUp(blogID, index) {
+                this.blogList[index].read_count += 1;
                 console.log(blogID, index);
+
             },
             setSortType(sort) {
                 this.sortType = sort;
@@ -127,7 +131,6 @@
             },
             setBlogWithMonth(month) {
                 this.searchWords = month;
-                this.getBlogList();
             },
             //时间格式化  
             dateFormat: function (date) {
@@ -191,7 +194,6 @@
                     return;
                 }
                 this.searchWords = this.searchKeys;
-                getBlogList();
             },
             querySearchAsync(queryString, callback) {
                 if (this.searchKeys.length < 2) {

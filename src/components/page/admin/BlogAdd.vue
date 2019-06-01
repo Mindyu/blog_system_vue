@@ -14,12 +14,12 @@
                         <el-input v-model="addForm.blog_title" class="blog_title"></el-input>
                     </el-form-item>
                     <el-form-item label="文章类别:" prop="type_id">
-                        <el-select placeholder="选中类别" v-model="addForm.type_id" class="handle-select mr10">
-                            <template v-for='type in blogTypeList'>
-                                <el-option :key="type.id" :label="type.type_name" :value="type.id"></el-option>
-                            </template>
+                        <el-select placeholder="选中类别" v-model="addForm.type_id" class="handle-select mr10" value="">
+                            <el-option v-for='type in blogTypeList' :key="type.id" :label="type.type_name" :value="type.id"></el-option>
                         </el-select>
-                        <el-button type="primary" v-if="hasAuthView()" icon="el-icon-circle-plus" @click="showDialog">新增</el-button>
+                        <el-button type="primary" v-if="hasAuthView()" icon="el-icon-circle-plus" @click="showDialog">
+                            新增
+                        </el-button>
                     </el-form-item>
                     <el-form-item label="关键字:" prop="keywords">
                         <el-tag :key="tag" v-for="tag in addForm.keywords" closable :disable-transitions="false"
@@ -54,6 +54,7 @@
                 </el-form>
             </div>
             <el-button class="editor-btn" type="primary" @click="saveTemp">保存草稿</el-button>
+            <el-button class="editor-btn" type="primary" @click="recover">恢复</el-button>
             <el-button class="editor-btn" type="primary" @click="submit">提交</el-button>
         </div>
 
@@ -240,7 +241,6 @@
                         this.blogTypeList = res.data.info;
                     } else {
                         this.$message(res.data.err_msg)
-                        //console.log(res.data.errMsg);
                     }
                 }).catch((err) => {
                     console.error(err);
@@ -260,7 +260,13 @@
                 })
             },
             saveTemp() {
-                this.$message.success('此功能暂不支持');
+                // this.$message.success('此功能暂不支持');
+                localStorage.setItem('temp_blog_content', this.addForm.blog_content);
+                localStorage.setItem('temp_blog_title', this.addForm.blog_title);
+                localStorage.setItem('temp_blog_type', this.addForm.type_id);
+                localStorage.setItem('temp_blog_keywords', this.addForm.keywords.join(','));
+                localStorage.setItem('temp_blog_personal', this.addForm.personal);
+                this.$message.success('已成功保存');
             },
             resetData() {
                 this.addForm = {
@@ -288,6 +294,14 @@
                 } else {
                     this.$route.meta.title = '新增博客';
                 }
+                this.recover();
+            },
+            recover(){
+                this.addForm.blog_content = localStorage.getItem('temp_blog_content');
+                this.addForm.blog_title = localStorage.getItem('temp_blog_title');
+                this.addForm.type_id = localStorage.getItem('temp_blog_type');
+                this.addForm.keywords = localStorage.getItem('temp_blog_keywords').split(',');
+                this.addForm.personal = localStorage.getItem('temp_blog_personal') === "true";
             },
             showDialog() {
                 this.addTypeForm = {
@@ -311,7 +325,7 @@
                     this.$message.info('添加类别出错');
                 })
             },
-            hasAuthView(){
+            hasAuthView() {
                 let role = localStorage.getItem("role");
                 return role === "admin" || role === "superadmin"
             }
@@ -321,7 +335,7 @@
             this.imagePath = api.uploadURL;
             bus.$on('refreshData', msg => {
                 this.initData();
-            })
+            });
         },
         mounted() {
             this.initData();

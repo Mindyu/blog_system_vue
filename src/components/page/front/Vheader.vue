@@ -16,7 +16,7 @@
             </li>
         </ul>
         <div class="header-title">
-            <h1 v-if="show" transition="fade">{{headlineFinal}}</h1>
+            <h1 v-show="show" transition="fade">{{headlineFinal}}</h1>
         </div>
     </div>
 </template>
@@ -51,18 +51,26 @@
         },
         methods: {
             scroll() {
-                let beforeScrollTop = document.body.scrollTop
-                window.onscroll = () => {
-                    const afterScrollTop = document.body.scrollTop
-                    const delta = afterScrollTop - beforeScrollTop
-                    this.isTop = afterScrollTop === 0
-                    if (delta === 0) return false
-                    beforeScrollTop = afterScrollTop
-                    this.isVisible = delta <= 0
+                let beforeScrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop
+                console.info(beforeScrollTop)
+                /*window.onscroll = () => {
+                    const afterScrollTop = document.body.scrollTop;
+                    const delta = afterScrollTop - beforeScrollTop;
+                    this.isTop = afterScrollTop === 0;
+                    if (delta === 0) return false;
+                    beforeScrollTop = afterScrollTop;
+                    this.isVisible = delta <= 0;   // 向上滑
                     if (afterScrollTop < 48) {
-                        this.isVisible = true
+                        this.isVisible = true;
+                    }else if(afterScrollTop > 300) {
+                        this.show = false;
                     }
-                }
+                    console.info(afterScrollTop)
+                }*/
+            },
+            handleScroll () {
+                var scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
+                console.log(scrollTop)
             }
         },
         created() {
@@ -71,7 +79,10 @@
             })
         },
         mounted() {
-            this.scroll();
+            window.addEventListener('scroll', this.handleScroll);
+        },
+        destroyed() {
+            window.removeEventListener('scroll', this.handleScroll)
         }
     }
 </script>

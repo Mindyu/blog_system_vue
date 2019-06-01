@@ -1,9 +1,12 @@
 <template>
     <div class="content">
+        <div id="show">
+            <v-goTop></v-goTop>
+        </div>
         <div class="article">
             <div v-html="content"></div>
         </div>
-        <comment :blogTitle="this.article.blog_title"></comment>
+        <comment :blogTitle="this.article.blog_title" v-show="showTitle"></comment>
     </div>
 </template>
 
@@ -11,35 +14,49 @@
     import marked from 'marked'
     import Prism from 'prismjs'
     import 'prismjs/themes/prism.css'
-    import Comment from './Comment'
-    import * as api from '../../../api/front';
+    import comment from './Comment'
+    import * as api from '../../../api/front'
     import bus from '@/components/common/bus'
+    import goTop from "../../common/goTop";
 
     marked.setOptions({
         highlight: (code) => Prism.highlight(code, Prism.languages.javascript)
-    })
+    });
     export default {
         data() {
             return {
-                article: {}
+                article: {},
+                scrollTop: 0,
+                time: 0,
+                dParams: 20,
+                scrollState: 0
             }
         },
         components: {
-            Comment
+            comment,
+            'v-goTop': goTop
         },
         computed: {
             content: function () {
                 let _content = this.article.blog_content;
-                console.log(_content);
                 if (_content) {
                     marked(_content, (err, content) => {
                         if (!err) {
                             _content = content
                         }
-                    })
+                    });
                     return _content
                 }
-            }
+            },
+            showTop: function () {
+                return this.scrollTop > 200;
+            },
+            showTitle: function () {
+                return this.scrollTop <= 200;
+            },
+        },
+        mounted() {
+            window.addEventListener('scroll', this.getScrollTop);
         },
         methods: {
             getArticle(blogID) {
@@ -57,6 +74,30 @@
                 }).catch((err) => {
                     console.error(err);
                 })
+            },
+            toTop(e) {
+                if (this.scrollState) {
+                    return;
+                }
+                this.scrollState = 1;
+                e.preventDefault();
+                let _this = this;
+                this.time = setInterval(function () {
+                    _this.gotoTop(_this.scrollTop - _this.dParams)
+                }, 10);
+            },
+            gotoTop(distance) {
+                this.dParams += 20;
+                let value = distance > 0? distance : 0;
+                document.documentElement.scrollTop = document.body.scrollTop = window.pageYOffset = value;
+                if (this.scrollTop < 10) {
+                    clearInterval(this.time);
+                    this.dParams = 20;
+                    this.scrollState = 0;
+                }
+            },
+            getScrollTop() {
+                this.scrollTop = window.pageYOffset || document.documentElement.scrollTop || document.body.scrollTop;
             }
         },
         created() {
@@ -66,6 +107,13 @@
 </script>
 
 <style>
+    .scrollTop {
+        position: fixed;
+        right: 40px;
+        bottom: 80px;
+        cursor: pointer;
+    }
+
     .content {
         width: 80%;
         max-width: 90rem;
