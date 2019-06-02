@@ -12,7 +12,7 @@
                         <el-table-column>
                             <template slot-scope="scope">
                                 <span class="message-title"
-                                      @click="showMsg(scope.row)">{{formatMsg(scope.row.sender)}}</span>
+                                      @click="showMsg(scope.row)">{{formatMsg(scope.row.sender, scope.row.created_at)}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="date" width="180"></el-table-column>
@@ -31,7 +31,7 @@
                         <el-table :data="readMsg" :show-header="false" style="width: 100%">
                             <el-table-column>
                                 <template slot-scope="scope">
-                                    <span class="message-title" @click="showMsg(scope.row)">{{formatMsg(scope.row.sender)}}</span>
+                                    <span class="message-title" @click="showMsg(scope.row)">{{formatMsg(scope.row.sender, scope.row.created_at)}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="date" width="150"></el-table-column>
@@ -51,7 +51,7 @@
                         <el-table :data="recycle" :show-header="false" style="width: 100%">
                             <el-table-column>
                                 <template slot-scope="scope">
-                                    <span class="message-title" @click="showMsg(scope.row)">{{formatMsg(scope.row.sender)}}</span>
+                                    <span class="message-title" @click="showMsg(scope.row)">{{formatMsg(scope.row.sender, scope.row.created_at)}}</span>
                                 </template>
                             </el-table-column>
                             <el-table-column prop="date" width="150"></el-table-column>
@@ -113,6 +113,7 @@
                 recycle: [{
                     msg_content: "【系统通知】提醒您，今晚凌晨2-3会进行系统升级！",
                     sender: "系统通知",
+                    created_at: "2019-05-06 10:12:12"
                 }],
                 addLoading: false, //点击添加按钮后加载
                 addVisible: false,
@@ -156,8 +157,8 @@
                 const item = this.recycle.splice(index, 1);
                 this.readMsg = item.concat(this.readMsg);
             },
-            formatMsg(val) {
-                return "【" + val + "】向你发来了一条私信";
+            formatMsg(val, time) {
+                return "【" + val + "】向你发来了一条私信   " + time;
             },
             getNotReadMsg() {
                 var params = {
